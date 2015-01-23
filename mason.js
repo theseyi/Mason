@@ -78,7 +78,7 @@
 
 				// Size Elements
 				sizeElements();
-			};
+			}
 
 			/*
 			 * Size elements according to block size and column count
@@ -96,7 +96,6 @@
 					});
 				} else {
 
-
 					/*
 					 * Push our promoted sizes into our sizes array ( this is for counting )
 					 */
@@ -109,14 +108,14 @@
 					 */
 
 					$self.children(settings.itemSelector).each(function() {
-						$sel = $(this);
+						var $sel = $(this);
 
 						// pick a random number between 0 and the length of sizes ( - the promoted size! )
 						var ran;
 						if(settings.randomSizes){
 							ran = Math.floor(Math.random() * (settings.sizes.length - settings.promoted.length));
 						}else{
-							
+
 							ran = $sel.data("layout");
 							if(typeof(ran)=='undefined'){
 								ran = Math.floor(Math.random() * (settings.sizes.length - settings.promoted.length));
@@ -174,6 +173,14 @@
 						// @ l = left ( column )
 						var l = Math.round($sel.position().left / elements.block.width);
 						var t = Math.round($sel.position().top / elements.block.height);
+						var y2 = Math.round($sel.position().top + $sel.height());
+						var x2 = Math.round($sel.position().left + $sel.width());
+
+						// Remove elements that don't fall within the container elements height constraint
+						if (t >= block_h || y2 / elements.block.height > el_h) {
+							$sel.remove();
+							return true; // Next iter
+						}
 
 						// turn the data size into a number
 						var s = parseFloat($sel.data('size'));
@@ -228,7 +235,7 @@
 								}else{
 									ran =  fillerNum -1;
 								}
-								
+
 								filler = $(settings.filler.itemSelector).eq(ran).clone(settings.filler.keepDataAndEvents);
 
 								filler.addClass(settings.filler.filler_class);
