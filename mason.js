@@ -22,6 +22,9 @@
 				[1320, 1680, 5]
 			],
 			promoted: [],
+			constrain: {
+				height: false
+			},
 			filler: {
 				itemSelector: options.itemSelector,
 				filler_class: 'mason_filler',
@@ -173,14 +176,17 @@
 						// @ l = left ( column )
 						var l = Math.round($sel.position().left / elements.block.width);
 						var t = Math.round($sel.position().top / elements.block.height);
-						var y2 = Math.round($sel.position().top + $sel.height());
-						var x2 = Math.round($sel.position().left + $sel.width());
+						var y2 = Math.round($sel.position().top + $sel.height()) + settings.gutter * 2;
+						var x2 = Math.round($sel.position().left + $sel.width()) + settings.gutter * 2;
 
 						// Remove elements that don't fall within the container elements height constraint
-						if (t >= block_h || y2 / elements.block.height > el_h) {
-							$sel.remove();
-							return true; // Next iter
+						if (settings.constrain.height) {
+							if (t >= block_h || y2 / elements.block.height > el_h) {
+								$sel.remove();
+								return true;
+							}
 						}
+
 
 						// turn the data size into a number
 						var s = parseFloat($sel.data('size'));
